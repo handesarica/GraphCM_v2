@@ -23,11 +23,11 @@ class Dataset(object):
         self.train_set = self.load_dataset(os.path.join(self.data_dir, 'train_per_query_quid.txt'), mode='train')
         self.valid_set = self.load_dataset(os.path.join(self.data_dir, 'valid_per_query_quid.txt'), mode='valid')
         self.test_set = self.load_dataset(os.path.join(self.data_dir, 'test_per_query_quid.txt'), mode='test')
-        self.label_set = self.load_dataset(os.path.join(self.data_dir, 'human_label_for_GraphCM_per_query_quid.txt'), mode='label')
+        #self.label_set = self.load_dataset(os.path.join(self.data_dir, 'human_label_for_GraphCM_per_query_quid.txt'), mode='label')
         self.trainset_size = len(self.train_set)
         self.validset_size = len(self.valid_set)
         self.testset_size = len(self.test_set)
-        self.labelset_size = len(self.label_set)
+        #self.labelset_size = len(self.label_set)
 
         self.query_qid = utils.load_dict(self.data_dir, 'query_qid.dict')
         self.url_uid = utils.load_dict(self.data_dir, 'url_uid.dict')
@@ -39,7 +39,7 @@ class Dataset(object):
         self.logger.info('Train set size: {} sessions.'.format(len(self.train_set)))
         self.logger.info('Dev set size: {} sessions.'.format(len(self.valid_set)))
         self.logger.info('Test set size: {} sessions.'.format(len(self.test_set)))
-        self.logger.info('Label set size: {} sessions.'.format(len(self.label_set)))
+        #self.logger.info('Label set size: {} sessions.'.format(len(self.label_set)))
         self.logger.info('Unique query num, including zero vector: {}'.format(self.query_size))
         self.logger.info('Unique doc num, including zero vector: {}'.format(self.doc_size))
         self.logger.info('Unique vtype num, including zero vector: {}'.format(self.vtype_size))
@@ -84,14 +84,14 @@ class Dataset(object):
                 uids = json.loads(attr[2].strip())
                 vids = json.loads(attr[3].strip())
                 clicks = [0] + json.loads(attr[4].strip())
-                relevances = json.loads(attr[5].strip()) if mode == 'label' else [0 for _ in range(self.max_d_num)]
+                #relevances = json.loads(attr[5].strip()) if mode == 'label' else [0 for _ in range(self.max_d_num)]
             else:
                 # the previous session continues
                 qids.append(int(attr[1].strip()))
                 uids = uids + json.loads(attr[2].strip())
                 vids = vids + json.loads(attr[3].strip())
                 clicks = clicks + json.loads(attr[4].strip())
-                relevances = relevances + (json.loads(attr[5].strip()) if mode == 'label' else [0 for _ in range(self.max_d_num)])
+                #relevances = relevances + (json.loads(attr[5].strip()) if mode == 'label' else [0 for _ in range(self.max_d_num)])
         last_rank = 0
         for idx, click in enumerate(clicks[1:]):
             last_rank = idx + 1 if click else last_rank
@@ -146,7 +146,9 @@ class Dataset(object):
         elif set_name == 'test':
             data = self.test_set
         elif set_name == 'label':
-            data = self.label_set
+            #data = self.label_set
+            #Eğer label olsaydı, burası kullanılacaktı
+            pass
         else:
             raise NotImplementedError('No data set named as {}'.format(set_name))
         data_size = len(data)
