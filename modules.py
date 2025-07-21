@@ -28,6 +28,7 @@ class DGATLayer(nn.Module):
         self.dataset = args.dataset
         self.data_dir = os.path.join('data', self.dataset)
 
+        """
         if args.use_pretrain_embed:
             self.qid_embedding = torch.load(os.path.join(self.data_dir, 'embeddings/dgat_qid_embedding.pth'))
             self.uid_embedding = torch.load(os.path.join(self.data_dir, 'embeddings/dgat_uid_embedding.pth'))
@@ -38,6 +39,10 @@ class DGATLayer(nn.Module):
         else:
             self.qid_embedding = nn.Embedding(query_size, self.args.embed_size)
             self.uid_embedding = nn.Embedding(doc_size, self.args.embed_size)
+        """
+        #Pretrain embedding kullanılmıyor → Direkt yeni embedding oluşturuluyor
+        self.qid_embedding = nn.Embedding(query_size, self.args.embed_size)
+        self.uid_embedding = nn.Embedding(doc_size, self.args.embed_size)
         self.click_embedding = nn.Embedding(2, self.args.click_embed_size)
         self.vid_embedding = nn.Embedding(vtype_size, self.args.vtype_embed_size)
         self.pos_embedding = nn.Embedding(10, self.args.pos_embed_size)
