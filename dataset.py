@@ -154,9 +154,7 @@ class Dataset(object):
         elif set_name == 'test':
             data = self.test_set
         elif set_name == 'label':
-            #data = self.label_set
-            #Eğer label olsaydı, burası kullanılacaktı
-            pass
+            data = self.label_set
         else:
             raise NotImplementedError('No data set named as {}'.format(set_name))
         data_size = len(data)
