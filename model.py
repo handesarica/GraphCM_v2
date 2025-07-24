@@ -131,12 +131,25 @@ class Model(object):
                 torch.cuda.empty_cache()
                 self.writer.add_scalar("test/click_loss", test_click_loss, self.global_step)
                 self.writer.add_scalar("test/perplexity", test_perplexity, self.global_step)
-                
+
+                # Label_set yeniden düzenleme
+                """
                 label_batches = dataset.gen_mini_batches('label', dataset.labelset_size, shuffle=False)
                 ndcgs = self.ranking(label_batches, dataset)
                 torch.cuda.empty_cache()
                 for trunc_level in self.trunc_levels:
                     self.writer.add_scalar("rank/{}".format(trunc_level), ndcgs[trunc_level], self.global_step)
+                """
+                if dataset.labelset_size > 0:
+                    label_batches = dataset.gen_mini_batches('label', dataset.labelset_size, shuffle=False)
+                    ndcgs = self.ranking(label_batches, dataset)
+                    for trunc_level in self.trunc_levels:
+                        value = ndcgs.get(trunc_level, 0.0)
+                        self.writer.add_scalar("rank/{}".format(trunc_level), value, self.global_step)
+                else:
+                    self.logger.info("Skipping NDCG computation — no human label data available.")
+
+                torch.cuda.empty_cache()
 
                 if valid_perplexity < metric_save:
                     metric_save = valid_perplexity
